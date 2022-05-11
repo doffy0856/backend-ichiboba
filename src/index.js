@@ -32,11 +32,10 @@ const db = mysql.createConnection({
     console.log("Connected!")
   });
   
-  app.post('/upload', upload.single('file'), async(req, res) => {
+  app.post('/upload', upload.single('file'), async(req, res) => { //upImage
     if(!req.file) {
         res.status(400).send("Error: No files found")
     } else {
-
         const imagefile = req.file
         const imageUrl = await getImageUrl(req, imagefile)
         console.log('hello', imageUrl)
@@ -56,7 +55,6 @@ async function getImageUrl(req, imagefile) {
                   contentType: req.file.mimetype
               }
           })
-          
           stream.on('error', (err) => {
               console.log(err)
           })
@@ -264,9 +262,10 @@ async function getImageUrl(req, imagefile) {
     })
     // console.log(req.body)
   })
+
   app.post('/delete-data/id' , async (req,res) => {
     const id = req.body.id
-    console.log('hello', id)
+    // console.log('hello', id)
     db.query(`DELETE FROM address WHERE num_id ='${id} '` ,(error, result) => {
       if(error) {
         console.log("error",error)
@@ -316,6 +315,68 @@ async function getImageUrl(req, imagefile) {
     })
   }),
  
+
+  app.post('/insert/post', async (req,res) => {
+    const data_postConfirm = req.body.data_postConfirm
+    console.log('test', data_postConfirm)
+
+    var addpost_sql = `INSERT INTO admin_post (date_post, image_post ,detail_post) VALUES 
+  (
+    '${data_postConfirm.date_post}', 
+    '${data_postConfirm.image_post}', 
+    '${data_postConfirm.detail_post}'
+  )`;
+
+  let addpost_result = await save_post(addpost_sql);
+  console.log('resul', addpost_result)
+  })
+
+  async function save_post(sql) {
+    return new Promise((resolve, reject) => {
+      try {
+        db.query(sql, function (err, result) {
+          if (err) throw err;
+          resolve(result);
+        });
+      }
+      catch (ex) {
+        reject(ex);
+      }
+    });
+  }
+
+  app.get('/post-admin' , async (req,res) => {
+    // console.log("fooffof")
+    db.query('SELECT * FROM admin_post order by date_post DESC',(error, result) => {
+      if(error) {
+        console.log("error",error)
+      }
+      if(result.length) {
+        res.send({
+          status: 200,
+          data : result
+        })
+      }
+      else{
+        res.send({
+          status: 201,
+          data : null
+        })
+      }
+    })
+  }),
+
+
+  app.post('/delete/post-data' , async (req,res) => {
+    const post_id = req.body.post_id
+    console.log('hello', post_id)
+    db.query(`DELETE FROM admin_post WHERE post_id ='${post_id} '` ,(error, result) => {
+      if(error) {
+        console.log("error",error)
+      }
+    })
+  }),
+
 
 
 app.listen(port, () => {
