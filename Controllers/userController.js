@@ -4,10 +4,8 @@ const db = require('../Config/database')
 module.exports = {
     uploadPersondata: async(req, res) => {
         const data_personConfirm = req.body.data_personConfirm
-        const data_detailConfirm = req.body.data_detailConfirm
-        // console.log(data_personConfirm)
-        // console.log(data_detailConfirm) 
-      //Insert a record in the "customers" table:
+        const data_detailConfirm = req.body.data_detailConfirm 
+      
       var person_sql = `INSERT INTO person_info (num_id,create_date ,prefix , name, lastname, img_card,  num_phone, num_phone_home, fax, email, experience, experience_detail, status) VALUES 
       (
         '${data_personConfirm.num_id}', 
@@ -40,7 +38,7 @@ module.exports = {
         '${data_detailConfirm.home_road}'
       )`;
     
-      var store_decoration_sql = `INSERT INTO store_decoration (num_id, n_place ,latitude , longitude, landload, meter_area,  store_decorate, store_descrip) VALUES 
+      var store_decoration_sql = `INSERT INTO store_decoration (num_id, n_place ,latitude , longitude, landlord, meter_area,  store_decorate, store_descrip) VALUES 
       (
         '${data_personConfirm.num_id}', 
         '${data_detailConfirm.n_place}', 

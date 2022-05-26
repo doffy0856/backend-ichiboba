@@ -45,7 +45,6 @@ module.exports = {
     },
     getID: async(req, res) => {
         const data = req.query
-    // console.log(data.id)
         db.query(`SELECT * FROM person_info AS a 
         INNER JOIN address AS b on a.num_id = b.num_id 
         INNER JOIN store_decoration AS c on a.num_id = c.num_id 
@@ -55,22 +54,17 @@ module.exports = {
             console.log("error",error)
         }
         if(result.length) {
-            // console.log(result)
             res.send({
             status: 200,
-            data : result
-            
+            data : result           
             })
         }
         else{
             res.send({
             status: 201,
-            // data : null,
-            
             })
-            console.log("result")
         }
-        })
+      })
     },
     approveUser: async(req, res) => {
         const data = req.body
@@ -98,46 +92,38 @@ module.exports = {
               status: 200,
               messege: "Update success"
             })
-            console.log("success")
           }
         })
     },
     deleteUser: async(req, res) => {
         const id = req.body.id
-        // console.log('hello', id)
         db.query(`DELETE FROM address WHERE num_id ='${id} '` ,(error, result) => {
           if(error) {
             console.log("error",error)
           }
-    
           else{
             db.query(`DELETE FROM environment_place WHERE num_id ='${id} '` ,(error, result) => {
               if(error) {
                 console.log("error",error)
-              }
-        
+              }        
               else{
                 db.query(`DELETE FROM store_decoration WHERE num_id ='${id} '` ,(error, result) => {
                   if(error) {
                     console.log("error",error)
-                  }
-            
+                  }         
                   else{
                     db.query(`DELETE FROM surround_place WHERE num_id ='${id} '` ,(error, result) => {
                       if(error) {
                         console.log("error",error)
-                      }
-                
+                      }              
                       else{
                         db.query(`DELETE FROM person_info WHERE num_id ='${id} '` ,(error, result) => {
                           if(error) {
                             console.log("error",error)
-                          }
-                    
+                          }           
                           else{
                             console.log('success')
                             res.send("Delete Success")
-                            
                           }
                         })
                         
@@ -149,7 +135,6 @@ module.exports = {
                 
               }
             })
-             
           }
         })
     },
@@ -181,15 +166,40 @@ module.exports = {
           }
         })
     },
-    // editPost: async(req, res) => {
-    //     const post_id = req.body.post_id
-    //     // console.log('hello', post_id)
-    //     db.query(`UPDATE FROM admin_post SET image_post = ? , detail_post = ? WHERE post_id ='${post_id} '` ,(error, result) => {
-    //       if(error) {
-    //         console.log("error",error)
-    //       }
-    //     })
-    // }
+    getPostID: async(req, res) => {
+      const data = req.query
+      // console.log(data.post_id)
+      db.query(`SELECT * FROM admin_post WHERE post_id = '${data.post_id} '` ,(error, result) => {
+      if(error) {
+          console.log("error",error)
+      }
+      if(result.length) {
+          // console.log(result)
+          res.send({
+          status: 200,
+          data : result
+          
+          })
+      }
+      else{
+          res.send({
+          status: 201,
+          // data : null,
+          
+          })
+          console.log("result")
+      }
+      })
+    },
+    updatePost: async(req, res) => {
+        const new_data = req.body.data
+        // console.log('hello', new_data)
+        db.query(`UPDATE admin_post SET date_post = "${new_data.date_post}" ,image_post = "${new_data.image_post}" , detail_post = "${new_data.detail_post} "WHERE post_id ="${new_data.post_id}"` ,(error, result) => {
+          if(error) {
+            console.log("error",error)
+          }
+        })
+    }
 }
 
     async function save_post(sql) {
@@ -232,4 +242,4 @@ module.exports = {
                 reject(ex);
             }
         });
-      }
+    }

@@ -16,7 +16,8 @@ router.put('/admin/noneapprove/status', adminController.rejectUser)
 router.post('/delete-data/id', adminController.deleteUser)
 router.get('/post-admin', adminController.getPost)
 router.post('/delete/post-data', adminController.deletePost)  
-// router.put('/edit-post', adminController.editPost)
+router.get('/admin/post-id', adminController.getPostID) 
+router.post('/edit-post', adminController.updatePost)
 
 
 // export router
